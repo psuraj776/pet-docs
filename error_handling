@@ -1,0 +1,76 @@
+docker: Error response from daemon: Conflict. The container name "/test-mongo" is already in use by container "d4e620d00189c77fd302c39a2ec32b6c6f386ba85a96fb00f3194b4ff403142b". You have to remove (or rename) that container to be able to reuse that name.
+See 'docker run --help'.
+
+The error message indicates that there is already a container named /test-mongo running or existing on your system. You need to stop and remove the existing container before starting a new one with the same name. Here’s how you can handle this:
+Step 1: Stop and Remove Existing test-mongo Container
+
+    Stop the existing test-mongo container:
+
+
+docker stop test-mongo
+
+Remove the existing test-mongo container:
+
+    docker rm test-mongo
+
+If the container is not running, you can directly remove it with:
+
+docker rm test-mongo
+
+Step 2: Verify Removal of the Container
+
+    List all Docker containers (running and stopped):
+
+    docker ps -a
+
+    Ensure that test-mongo is not listed in the output.
+
+Step 3: Run the MongoDB Container Again
+
+    Run MongoDB in a Docker container:
+
+    docker run -d -p 27017:27017 --name test-mongo mongo
+
+Full Sequence of Commands
+
+To ensure a clean setup, here is the full sequence of commands you can use:
+
+    Stop and Disable MongoDB Service:
+
+sudo systemctl stop mongod
+sudo systemctl disable mongod
+
+Stop and Remove Existing MongoDB Container:
+
+docker stop test-mongo
+docker rm test-mongo
+
+Run MongoDB in a Docker Container:
+
+    docker run -d -p 27017:27017 --name test-mongo mongo
+
+Starting the Application with Docker Compose
+
+    Navigate to the Docker Compose Directory:
+
+cd /path/to/pet-vet-compose
+
+Start the Services Using Docker Compose:
+
+
+    docker-compose up --build
+
+Access the Application
+
+    Frontend: Open your browser and go to http://localhost:3000.
+    Backend API: Use Postman or curl to interact with the backend APIs at http://localhost:8080.
+
+Stopping the Services
+
+    Stop Docker Compose Services:
+
+docker-compose down
+
+Stop and Remove the MongoDB Container:
+docker stop test-mongo
+docker rm test-mongo
