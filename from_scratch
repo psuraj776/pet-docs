@@ -1,0 +1,131 @@
+Ensure you have the following installed:
+
+    Docker
+    Docker Compose
+    MongoDB (optional, if not running in a container)
+
+#Starting the Services
+##Step 1: Start MongoDB
+
+###Ensure MongoDB is not already running:
+
+**sudo systemctl stop mongod
+sudo systemctl disable mongod**
+
+###Run MongoDB in a Docker container:
+
+**docker run -d -p 27017:27017 --name test-mongo mongo**
+
+##Step 2: Start Docker Compose
+
+###Navigate to the Docker Compose directory:
+
+**cd /path/to/pet-vet-compose**
+
+###Ensure the docker-compose.yml file is correctly set up:
+
+*yaml*
+**
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ../pet-vet-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/petvet
+    volumes:
+      - logs:/var/log/backend
+  frontend:
+    build:
+      context: ../pet-vet-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+volumes:
+  mongo-data:
+  logs:
+**
+
+###Build and start the services using Docker Compose:
+
+**docker-compose up --build**
+
+## Step 3: Test the Application in the Browser
+
+### Open your browser and navigate to the frontend URL:
+
+**http://localhost:3000**
+
+###Check the backend API using a tool like Postman or curl:
+
+** curl http://localhost:8080/api/vets
+curl http://localhost:8080/api/pets **
+
+#Stopping the Services
+##Step 1: Stop Docker Compose Services
+
+###Navigate to the Docker Compose directory:
+
+**cd /path/to/pet-vet-compose**
+
+###Stop the services using Docker Compose:
+
+**docker-compose down**
+
+Step 2: Stop and Remove the MongoDB Container
+
+Stop the MongoDB container:
+
+docker stop test-mongo
+
+Remove the MongoDB container:
+docker rm test-mongo
+
+Management Scripts
+
+To simplify starting and stopping the services, you can use the following scripts:
+
+start_service.sh:
+
+#!/bin/bash
+docker-compose up --build -d
+
+stop_service.sh:
+
+#!/bin/bash
+docker-compose down
+docker stop test-mongo
+docker rm test-mongo
+
+view_logs.sh:
+
+#!/bin/bash
+docker-compose logs -f
+
+Make the scripts executable:
+
+chmod +x start_service.sh stop_service.sh view_logs.sh
+
+Running the Scripts
+
+Start the services:
+
+./start_service.sh
+
+Stop the services:
+
+./stop_service.sh
+
+View logs:
+
+./view_logs.sh
+
