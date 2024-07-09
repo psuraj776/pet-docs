@@ -1,0 +1,1 @@
+sudo lsof -iTCP:27017 -sTCP:LISTEN
