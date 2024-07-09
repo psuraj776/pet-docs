@@ -1,0 +1,8 @@
+Navigate to the Docker Compose directory:
+
+cd /path/to/pet-vet-compose
+
+Rebuild and start the services:
+
+docker-compose down
+docker-compose up --build
